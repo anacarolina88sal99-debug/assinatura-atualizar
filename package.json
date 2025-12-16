@@ -1,0 +1,14 @@
+{
+  "name": "netflix-payment-vercel",
+  "version": "1.0.0",
+  "description": "Netflix Payment Form with MongoDB",
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "dependencies": {
+    "mongoose": "^7.5.0"
+  },
+  "devDependencies": {
+    "vercel": "^28.16.11"
+  }
+}
